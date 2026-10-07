@@ -1,16 +1,18 @@
 {
   "name": "micknorj.tools-mtcord",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A browser extension for managing Discord messages.",
   "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test": "node --experimental-strip-types --test tests/*.test.*",
     "build": "npm run typecheck && node scripts/build.mjs",
-    "package": "npm run build && node scripts/package.mjs",
+    "check": "npm test && npm run audit:prod",
+    "package": "npm run check && npm run build && node scripts/package.mjs && npm run verify:packages",
+    "verify:packages": "node scripts/verify-packages.mjs",
     "audit:prod": "npm audit --omit=dev"
   },
   "dependencies": {

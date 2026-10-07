@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { abortableDelay, ApiError, parseSearchResponse } from "../src/lib/api.ts";
 import { archiveMessage, createJsonFiles } from "../src/lib/export.ts";
 import createManifest from "../src/manifest.ts";
+import packageInfo from "../package.json" with { type: "json" };
 import {
   applyLocalFilters,
   attachmentFilename,
@@ -142,8 +143,9 @@ test("cancels rate-limit waits immediately", async () => {
 
 test("extension manifests request only the active-tab permission", () => {
   for (const target of ["chromium", "firefox"]) {
-    const manifest = createManifest(target) as unknown as { permissions: string[] };
+    const manifest = createManifest(target) as unknown as { permissions: string[]; version: string };
     assert.deepEqual(manifest.permissions, ["activeTab"]);
+    assert.equal(manifest.version, packageInfo.version);
   }
 });
 

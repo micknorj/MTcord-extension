@@ -1,4 +1,5 @@
 import type { ManifestV3Export } from "@crxjs/vite-plugin";
+import packageInfo from "../package.json" with { type: "json" };
 
 export default function createManifest(target?: string): ManifestV3Export {
   const isFirefox = target === "firefox";
@@ -6,7 +7,7 @@ export default function createManifest(target?: string): ManifestV3Export {
     manifest_version: 3,
     name: "MTcord",
     short_name: "MTcord",
-    version: "0.1.0",
+    version: packageInfo.version,
     description: "Browse, export, download, and delete your Discord messages.",
     permissions: ["activeTab"],
     host_permissions: [
@@ -38,8 +39,9 @@ export default function createManifest(target?: string): ManifestV3Export {
               data_collection_permissions: {
                 required: ["none"],
               },
-              strict_min_version: "121.0",
+              strict_min_version: "140.0",
             },
+            gecko_android: { strict_min_version: "142.0" },
           },
         }
       : {}),

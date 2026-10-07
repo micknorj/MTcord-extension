@@ -393,7 +393,6 @@ export default function App() {
         <main className="app">
         <header className="header">
           <div className="header-copy">
-            <p className="eyebrow">Mick&apos;s Tools</p>
             <h1>MTcord</h1>
           </div>
           <button className="appearance" type="button" onClick={cycleAppearance} aria-label={`Appearance: ${appearance}. Change appearance`}>

@@ -6,9 +6,6 @@ Run the complete local check from the repository root before browser testing:
 
 ```sh
 npm ci
-npm test
-npm run typecheck
-npm run audit:prod
 npm run package
 ```
 
@@ -28,6 +25,8 @@ npm run package
 3. Select `dist/firefox/manifest.json` from the repository.
 
 Repeat the checklist in both browser families.
+
+Firefox 140 or later is required for the manifest's built-in no-data-collection declaration. Android is not a supported release target.
 
 ## Connection and scope
 
@@ -84,21 +83,31 @@ Repeat the checklist in both browser families.
 
 ```powershell
 Get-ChildItem .\packages\*.zip | Select-Object Name, Length
-tar.exe -tf .\packages\MTcord-v0.1-chromium.zip
-tar.exe -tf .\packages\MTcord-v0.1-firefox.zip
+tar.exe -tf .\packages\MTcord-v0.1.1-chromium.zip
+tar.exe -tf .\packages\MTcord-v0.1.1-firefox.zip
 Get-FileHash .\packages\*.zip -Algorithm SHA256
 ```
 
 Confirm that neither package contains source maps, tests, credentials, logs, screenshots or Discrub Classic branding.
 
+Firefox manifest linting (optional tooling, pinned version):
+
+```sh
+npx --yes web-ext@10.7.0 lint --source-dir dist/firefox
+```
+
+The bundled React DOM renderer may produce `UNSAFE_VAR_ASSIGNMENT` warnings for its internal `dangerouslySetInnerHTML` support. MTcord does not use `innerHTML` or `dangerouslySetInnerHTML` in application code. Review any new warning rather than suppressing it automatically.
+
 ## Release checklist
 
-- Confirm `package.json` and both generated manifests report version `0.1.0`
+- Confirm `package.json` and both generated manifests report version `0.1.1`
 - Confirm all automated checks pass
 - Complete the browser checklist in Chromium and Firefox
 - Inspect both release packages
 - Record the SHA-256 hashes
-- Create tag `v0.1.0` from the tested commit
-- Attach `MTcord-v0.1-chromium.zip` and `MTcord-v0.1-firefox.zip` to the GitHub release
+- Run `npm run verify:packages` and attach the generated `SHA256SUMS.txt`
+- Confirm the project and runtime license files are present in both ZIPs
+- Create tag `v0.1.1` from the tested commit
+- Attach `MTcord-v0.1.1-chromium.zip` and `MTcord-v0.1.1-firefox.zip` to the GitHub release
 - Describe the Firefox package as temporary and unsigned
 - Confirm the release links and installation steps from a clean browser profile

@@ -12,6 +12,7 @@ MTcord uses different naming, branding, interface code and a reduced feature set
 
 - [React](https://react.dev/) — MIT License
 - [React DOM](https://react.dev/) — MIT License
+- [React Scheduler](https://github.com/facebook/react/tree/main/packages/scheduler) — MIT License (included through React DOM)
 - [fflate](https://github.com/101arrowz/fflate) — MIT License
 
 Development dependencies and their licenses are recorded in `package-lock.json`.

@@ -25,7 +25,7 @@ Download the browser packages from the [GitHub releases](https://github.com/mick
 
 ### Chromium
 
-1. Download `MTcord-v0.1-chromium.zip` from the latest release.
+1. Download `MTcord-v0.1.1-chromium.zip` from the latest release.
 2. Extract the ZIP file.
 3. Open `chrome://extensions` or the equivalent extensions page.
 4. Enable Developer mode.
@@ -37,7 +37,7 @@ Extensions installed in Developer mode must be updated manually.
 
 The current Firefox package is intended for temporary testing while the extension remains unsigned.
 
-1. Download `MTcord-v0.1-firefox.zip` from the latest release.
+1. Download `MTcord-v0.1.1-firefox.zip` from the latest release.
 2. Extract the ZIP file.
 3. Open `about:debugging#/runtime/this-firefox`.
 4. Choose **Load Temporary Add-on** and select `manifest.json` from the extracted folder.
@@ -83,7 +83,7 @@ MTcord does not request access to all websites, browsing history or cookies.
 
 ## Limitations
 
-- Desktop Chromium and Firefox browsers only
+- Desktop Chromium and Firefox 140 or later; Android is not a supported or tested target
 - Browser-store packages are not currently available
 - Manually installed Chromium packages do not update automatically
 - The current Firefox package is temporary and unsigned
@@ -101,13 +101,33 @@ Install [Node.js](https://nodejs.org/) 22.18 or later. From the repository root:
 
 ```sh
 npm ci
-npm test
-npm run typecheck
-npm run audit:prod
 npm run package
 ```
 
-The packaged browser builds are written to `packages`.
+The packaging command runs tests, the production dependency audit, type checking, both browser builds, and ZIP/checksum verification. It writes `MTcord-v0.1.1-chromium.zip`, `MTcord-v0.1.1-firefox.zip`, and `SHA256SUMS.txt` to `packages`. Both ZIPs include the project and runtime dependency license terms.
+
+To recheck existing release ZIPs:
+
+```sh
+npm run verify:packages
+```
+
+## Preparing a GitHub release
+
+Run the packaging command above and complete the [manual browser checklist](MANUAL_TESTING.md) with a signed-in Discord test account before publishing.
+
+After committing and pushing the tested source, create and verify a signed tag, push it, and publish. Run each line only after the preceding command succeeds. Git signing must already be configured:
+
+```powershell
+git tag -s v0.1.1 -m "MTcord v0.1.1"
+git verify-tag v0.1.1
+git push origin v0.1.1
+gh release create v0.1.1 --repo micknorj/MTcord-extension --verify-tag --title "MTcord v0.1.1" --notes-file .\RELEASE_NOTES.md .\packages\MTcord-v0.1.1-chromium.zip .\packages\MTcord-v0.1.1-firefox.zip .\packages\SHA256SUMS.txt
+```
+
+The Firefox ZIP remains unsigned and intended for temporary installation. Packaging does not stage, commit, tag, push, or publish anything.
+
+## Interface development
 
 For interface development:
 
